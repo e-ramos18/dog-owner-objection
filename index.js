@@ -3,10 +3,21 @@ const app = express()
 
 const port = process.env.PORT || 4000
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'express running'
+const Owner = require('./models/Owner')
+const Dog = require('./models/Dog')
+
+app.get('/dogs', (request, response) => {
+  Dog.query().then(dogs => {
+    response.json({ dogs })
   })
+
+})
+
+app.get('/owners', (request, response) => {
+  Owner.query().withGraphFetched('dogs').then(owners => {
+    response.json({ owners })
+  })
+
 })
 
 app.listen(port)
